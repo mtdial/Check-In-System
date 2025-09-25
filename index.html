@@ -2,73 +2,250 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Check-In System (Starter)</title>
-  <style>
-    body { font-family: system-ui, Arial, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 16px; }
-    header { margin-bottom: 16px; }
-    form { display: grid; gap: 12px; }
-    label { font-weight: 600; }
-    input, select, button, textarea { padding: 10px; font-size: 1rem; }
-    .card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>University Advising Check-In</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header>
-    <h1>Student Check-In</h1>
-    <p>Enter your info to join the advising queue.</p>
+    <div class="logo">
+      <strong style="font-size:1.2rem;letter-spacing:0.08em;text-transform:uppercase;display:block;">University Advising Center</strong>
+      <span style="font-size:0.95rem;opacity:0.85;">University of South Carolina</span>
+    </div>
+    <h1>Advising Check-In Experience</h1>
+    <p>Welcome! Students can check in, advisors can monitor their queue, and administrators can manage the experience.</p>
   </header>
 
-  <section class="card">
-    <form id="checkin-form">
-      <div>
-        <label for="name">Full name</label><br/>
-        <input id="name" name="name" placeholder="Terry Advisor" required />
-      </div>
-      <div>
-        <label for="email">USC email</label><br/>
-        <input id="email" name="email" type="email" placeholder="name@email.sc.edu" required />
-      </div>
-      <div>
-        <label for="college">College</label><br/>
-        <select id="college" name="college" required>
-          <option value="">Select a college…</option>
-          <option>Arts & Sciences</option>
-          <option>Business (Darla Moore)</option>
-          <option>Engineering & Computing</option>
-          <option>Hospitality, Retail & Sport (HRSM)</option>
-          <option>Information & Communications (CIC)</option>
-          <option>Public Health</option>
-          <option>Nursing</option>
-          <option>Education</option>
-        </select>
-      </div>
-      <div>
-        <label for="advisor">Advisor</label><br/>
-        <select id="advisor" name="advisor" required>
-          <option value="">Select an advisor…</option>
-          <option>Any available advisor</option>
-          <option>Example: Brandi Byers</option>
-          <option>Example: Ali Mathwig</option>
-        </select>
-      </div>
-      <div>
-        <label for="reason">Reason (optional)</label><br/>
-        <textarea id="reason" name="reason" rows="3" placeholder="Registration help, major change, scholarship question…"></textarea>
-      </div>
-      <button type="submit">Check In</button>
-    </form>
-    <p id="thanks" style="display:none;margin-top:12px;"><strong>Thanks!</strong> You’ve been added to the queue.</p>
-  </section>
+  <main>
+    <nav class="tab-bar" aria-label="Primary">
+      <button class="tab-button active" data-target="student-view">Student Check-In</button>
+      <button class="tab-button" data-target="advisor-view">Advisor Queue</button>
+      <button class="tab-button" data-target="admin-view">Administration</button>
+    </nav>
 
-  <script>
-    // For now, keep it simple: don’t send anywhere—just confirm it worked.
-    document.getElementById('checkin-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      document.getElementById('checkin-form').reset();
-      document.getElementById('thanks').style.display = 'block';
-      setTimeout(()=> document.getElementById('thanks').style.display = 'none', 3000);
-    });
-  </script>
+    <section id="student-view" class="view active" aria-labelledby="student-tab">
+      <div class="card">
+        <h2>Check in for Your Appointment</h2>
+        <p class="muted">Use your USC email to join the advising queue. Advisors will be notified immediately.</p>
+        <div id="student-message" class="notice" hidden></div>
+        <form id="student-form" class="form-grid" autocomplete="off">
+          <div>
+            <label for="student-name">Full name</label>
+            <input id="student-name" name="student-name" placeholder="Cocky the Gamecock" required />
+          </div>
+          <div>
+            <label for="student-email">USC email</label>
+            <input id="student-email" name="student-email" type="email" placeholder="name@email.sc.edu" required />
+            <p class="help-text">Please use your @email.sc.edu address.</p>
+          </div>
+          <div>
+            <label for="student-college">College</label>
+            <select id="student-college" name="student-college" required>
+              <option value="">Select a college…</option>
+            </select>
+          </div>
+          <div>
+            <label for="student-advisor">Advisor</label>
+            <select id="student-advisor" name="student-advisor" required>
+              <option value="">Select an advisor…</option>
+            </select>
+            <p class="help-text">Advisors are filtered by college. Choose “Any available advisor” if you don’t have a preference.</p>
+          </div>
+          <div>
+            <label for="student-reason">Reason for your visit</label>
+            <select id="student-reason" name="student-reason" required>
+              <option value="">Select a reason…</option>
+            </select>
+            <p class="help-text">Reasons are managed by the University Advising Center.</p>
+          </div>
+          <div>
+            <label for="student-notes">Anything else we should know? <span class="muted">(optional)</span></label>
+            <textarea id="student-notes" name="student-notes" rows="3" placeholder="Ex. I need help finalizing my spring schedule."></textarea>
+          </div>
+          <button type="submit" class="cta">Check In</button>
+        </form>
+        <div id="student-success" class="notice success" hidden>
+          <strong>Thanks!</strong> You’re checked in. Please keep an eye out for your advisor.
+        </div>
+      </div>
+    </section>
+
+    <section id="advisor-view" class="view" aria-labelledby="advisor-tab">
+      <div class="card" id="advisor-login-card">
+        <h2>Advisor Sign In</h2>
+        <div id="advisor-message" class="notice" hidden></div>
+        <form id="advisor-login-form" class="form-grid" autocomplete="off">
+          <div>
+            <label for="advisor-username">Username</label>
+            <input id="advisor-username" name="advisor-username" placeholder="jdoe" required />
+          </div>
+          <div>
+            <label for="advisor-password">Password</label>
+            <input id="advisor-password" name="advisor-password" type="password" placeholder="••••••••" required />
+            <p class="help-text">First-time password is everything before the “@” in your USC email. You can update it after signing in.</p>
+          </div>
+          <button type="submit" class="cta">Sign In</button>
+        </form>
+      </div>
+
+      <div class="card" id="advisor-dashboard" hidden>
+        <div class="inline-actions">
+          <div>
+            <h2>Welcome, <span id="advisor-name"></span></h2>
+            <p class="muted">Listening for new student check-ins. Leave this tab open for real-time alerts.</p>
+          </div>
+          <div class="inline">
+            <div>
+              <label for="sound-preference">Notification sound</label>
+              <select id="sound-preference" class="sound-select">
+                <option value="ding">Bright ding</option>
+                <option value="doorbell">Doorbell chime</option>
+                <option value="door-open">Door opening sweep</option>
+              </select>
+            </div>
+            <button type="button" class="small-button primary" id="preview-sound">Preview</button>
+            <button type="button" class="logout-button" id="advisor-logout">Sign out</button>
+          </div>
+        </div>
+        <div class="table-wrapper" id="advisor-queue"></div>
+      </div>
+    </section>
+
+    <section id="admin-view" class="view" aria-labelledby="admin-tab">
+      <div class="card" id="admin-login-card">
+        <h2>Administrator Sign In</h2>
+        <div id="admin-message" class="notice" hidden></div>
+        <form id="admin-login-form" class="form-grid" autocomplete="off">
+          <div>
+            <label for="admin-username">Username</label>
+            <input id="admin-username" name="admin-username" placeholder="mtdial" required />
+          </div>
+          <div>
+            <label for="admin-password">Password</label>
+            <input id="admin-password" name="admin-password" type="password" placeholder="••••••••" required />
+          </div>
+          <button type="submit" class="cta">Sign In</button>
+        </form>
+      </div>
+
+      <div class="card" id="admin-dashboard" hidden>
+        <div class="inline-actions">
+          <div>
+            <h2>Administration</h2>
+            <p class="muted">Manage advisors, administrators, reasons, colleges, and monitor the university-wide queue.</p>
+          </div>
+          <button type="button" class="logout-button" id="admin-logout">Sign out</button>
+        </div>
+
+        <section class="card">
+          <h3>Student Queue Overview</h3>
+          <p class="muted">Active check-ins across all colleges and advisors.</p>
+          <div class="table-wrapper" id="admin-queue"></div>
+        </section>
+
+        <section class="card">
+          <h3>Manage Advisors</h3>
+          <div id="admin-advisor-message" class="notice" hidden></div>
+          <form id="add-advisor-form" class="form-grid two-column">
+            <div>
+              <label for="advisor-first-name">First name</label>
+              <input id="advisor-first-name" required />
+            </div>
+            <div>
+              <label for="advisor-last-name">Last name</label>
+              <input id="advisor-last-name" required />
+            </div>
+            <div>
+              <label for="advisor-email">USC email</label>
+              <input id="advisor-email" type="email" placeholder="name@email.sc.edu" required />
+            </div>
+            <div>
+              <label for="advisor-username-add">Username</label>
+              <input id="advisor-username-add" required />
+            </div>
+            <div class="inline">
+              <div>
+                <label for="advisor-college">College</label>
+                <input id="advisor-college" list="college-options" placeholder="College of Arts & Sciences" required />
+              </div>
+              <div>
+                <label>&nbsp;</label>
+                <button type="submit" class="cta">Add advisor</button>
+              </div>
+            </div>
+          </form>
+          <div class="file-input" style="margin-top:16px;">
+            <label for="advisor-csv" class="small-button primary">Upload CSV</label>
+            <input id="advisor-csv" type="file" accept=".csv" style="display:none;" />
+            <span class="help-text">Headers: fname, lname, email, username, college</span>
+          </div>
+          <datalist id="college-options"></datalist>
+          <div class="table-wrapper" id="advisor-table"></div>
+        </section>
+
+        <section class="card">
+          <h3>Manage Reasons</h3>
+          <form id="add-reason-form" class="inline">
+            <div>
+              <label for="reason-label">Reason name</label>
+              <input id="reason-label" placeholder="Registration help" required />
+            </div>
+            <div>
+              <label>&nbsp;</label>
+              <button type="submit" class="cta">Add reason</button>
+            </div>
+          </form>
+          <div id="reason-tags" class="tag-list"></div>
+        </section>
+
+        <section class="card">
+          <h3>Manage Colleges</h3>
+          <form id="add-college-form" class="inline">
+            <div>
+              <label for="college-label">College name</label>
+              <input id="college-label" placeholder="College of Engineering & Computing" required />
+            </div>
+            <div>
+              <label>&nbsp;</label>
+              <button type="submit" class="cta">Add college</button>
+            </div>
+          </form>
+          <div id="college-tags" class="tag-list"></div>
+        </section>
+
+        <section class="card">
+          <h3>Manage Administrators</h3>
+          <div class="notice" style="margin-bottom:16px;">
+            <strong>Owner account:</strong> Username <code>MTDIAL</code>, password <code>NELSON11!</code>. Please update after signing in.
+          </div>
+          <form id="add-admin-form" class="form-grid two-column">
+            <div>
+              <label for="admin-email-add">USC email</label>
+              <input id="admin-email-add" type="email" placeholder="name@email.sc.edu" required />
+            </div>
+            <div>
+              <label for="admin-username-add">Username</label>
+              <input id="admin-username-add" required />
+            </div>
+            <div>
+              <label for="admin-password-add">Temporary password</label>
+              <input id="admin-password-add" type="password" required />
+            </div>
+            <div>
+              <label>&nbsp;</label>
+              <button type="submit" class="cta">Add administrator</button>
+            </div>
+          </form>
+          <div class="table-wrapper" id="admin-table"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Built for the University of South Carolina Advising Center check-in experience prototype.
+  </footer>
+
+  <script src="app.js" type="module"></script>
 </body>
 </html>
