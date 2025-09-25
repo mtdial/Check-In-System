@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Check-In System (Starter)</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 16px; }
+    header { margin-bottom: 16px; }
+    form { display: grid; gap: 12px; }
+    label { font-weight: 600; }
+    input, select, button, textarea { padding: 10px; font-size: 1rem; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Student Check-In</h1>
+    <p>Enter your info to join the advising queue.</p>
+  </header>
+
+  <section class="card">
+    <form id="checkin-form">
+      <div>
+        <label for="name">Full name</label><br/>
+        <input id="name" name="name" placeholder="Terry Advisor" required />
+      </div>
+      <div>
+        <label for="email">USC email</label><br/>
+        <input id="email" name="email" type="email" placeholder="name@email.sc.edu" required />
+      </div>
+      <div>
+        <label for="college">College</label><br/>
+        <select id="college" name="college" required>
+          <option value="">Select a college…</option>
+          <option>Arts & Sciences</option>
+          <option>Business (Darla Moore)</option>
+          <option>Engineering & Computing</option>
+          <option>Hospitality, Retail & Sport (HRSM)</option>
+          <option>Information & Communications (CIC)</option>
+          <option>Public Health</option>
+          <option>Nursing</option>
+          <option>Education</option>
+        </select>
+      </div>
+      <div>
+        <label for="advisor">Advisor</label><br/>
+        <select id="advisor" name="advisor" required>
+          <option value="">Select an advisor…</option>
+          <option>Any available advisor</option>
+          <option>Example: Brandi Byers</option>
+          <option>Example: Ali Mathwig</option>
+        </select>
+      </div>
+      <div>
+        <label for="reason">Reason (optional)</label><br/>
+        <textarea id="reason" name="reason" rows="3" placeholder="Registration help, major change, scholarship question…"></textarea>
+      </div>
+      <button type="submit">Check In</button>
+    </form>
+    <p id="thanks" style="display:none;margin-top:12px;"><strong>Thanks!</strong> You’ve been added to the queue.</p>
+  </section>
+
+  <script>
+    // For now, keep it simple: don’t send anywhere—just confirm it worked.
+    document.getElementById('checkin-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.getElementById('checkin-form').reset();
+      document.getElementById('thanks').style.display = 'block';
+      setTimeout(()=> document.getElementById('thanks').style.display = 'none', 3000);
+    });
+  </script>
+</body>
+</html>
